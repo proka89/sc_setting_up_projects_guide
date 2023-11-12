@@ -235,7 +235,7 @@ docker exec -it CONTAINER_ID mysql -uUSERNAME -pPASSWORD
 docker-compose exec DB_SERVICE_NAME mysql -uUSERNAME -pPASSWORD
 ```
 
-### Flushing WordPress Cache
+#### Flushing WordPress Cache
 
 To flush the cache in WordPress:
 
@@ -244,7 +244,7 @@ To flush the cache in WordPress:
 docker exec CONTAINER_ID wp cache flush
 ```
 
-### Troubleshooting WordPress Permissions
+#### Troubleshooting WordPress Permissions
 
 To fix file permissions in a WordPress container:
 
