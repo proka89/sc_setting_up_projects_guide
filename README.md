@@ -59,7 +59,7 @@ To use these commands we will first create aliases for them. Creating or adding 
 
 Next step vould be to open the shell from the terminal with editors such as `vim` or `nano`. In this case we will use `vim`:
 
-- Type `vim ~/.zshrc` in the Terminal, to opet the `.zshrc` file. Then press `i` to enter the `INSERT` mode
+- Type `vim ~/.zshrc` in the Terminal, to open the `.zshrc` file. Then press `i` to enter the `INSERT` mode
 - We will be adding the aliases and two Docker related functions from the snipet below
 
 ```bash
@@ -126,7 +126,7 @@ After adding the alias and reloading the shell configuration, you can test it by
 dcl # Calls dockerlogin function
 ```
 
-Or if you don't have an [alias](https://github.com/stuntcoders/stunt_dev_setup/blob/master/install.sh#L72) set:
+Or if you don't have an alias set:
 
 ```bash
 docker-compose exec <service> /bin/bash # services: web, db, phpmyadmin, etc..
@@ -140,7 +140,7 @@ dwp plugin update <plugin> # paste plugin name from the list
 
 ```
 
-Or if you don't have an [alias](https://github.com/stuntcoders/stunt_dev_setup/blob/master/install.sh#L75-L111) set:
+Or if you don't have an alias set:
 
 ```bash
 docker-compose run wp_cli --rm --name wp_cli plugin/theme update
@@ -161,3 +161,96 @@ dwp db import dump.sql
 ```
 
 For more information about `wp-cli`, read [WP-CLI](https://developer.wordpress.org/cli/commands/) documentation.
+
+### Troubleshooting
+
+Docker commands and scenarios that could be useful for someone managing WordPress environments with Docker. These examples cover various common tasks and troubleshooting scenarios.
+
+#### Importing a Database
+
+If you need to import a database into a WordPress container, you can use the following commands:
+
+```bash
+# List running containers to find the database container ID
+docker ps
+
+# Import a database using the container ID
+docker exec -i CONTAINER_ID mysql -uUSERNAME -pPASSWORD DATABASE_NAME < your_database.sql
+
+# Or, using docker-compose
+docker-compose exec -T DB_SERVICE_NAME mysql -uUSERNAME -pPASSWORD DATABASE_NAME < your_database.sql
+```
+
+#### Exporting a Database
+
+To export a database from your Docker container, use these commands:
+
+```bash
+# Run Docker container in detached mode
+docker-compose up -d
+
+# List containers to find the database container ID
+docker ps
+
+# Export the database
+docker exec CONTAINER_ID /usr/bin/mysqldump -u root --password=PASSWORD DATABASE_NAME > exported_db.sql
+
+# Or, using docker-compose
+docker-compose exec -T DB_SERVICE_NAME /usr/bin/mysqldump -u root --password=PASSWORD DATABASE_NAME > exported_db.sql
+```
+
+#### Checking WordPress Logs
+
+To check the logs of your WordPress container:
+
+```bash
+# Using Docker
+docker logs CONTAINER_ID
+
+# Using docker-compose
+docker-compose logs SERVICE_NAME
+```
+
+#### Restarting Containers
+
+If you need to restart your containers:
+
+```bash
+# Restart all containers using Docker Compose
+docker-compose restart
+
+# Restart a specific service
+docker-compose restart SERVICE_NAME
+```
+
+#### Accessing MySQL Shell
+
+To access the MySQL shell within your Docker container:
+
+```bash
+# Using Docker
+docker exec -it CONTAINER_ID mysql -uUSERNAME -pPASSWORD
+
+# Using docker-compose
+docker-compose exec DB_SERVICE_NAME mysql -uUSERNAME -pPASSWORD
+```
+
+### Flushing WordPress Cache
+
+To flush the cache in WordPress:
+
+```bash
+# Flush cache using WP CLI
+docker exec CONTAINER_ID wp cache flush
+```
+
+### Troubleshooting WordPress Permissions
+
+To fix file permissions in a WordPress container:
+
+```bash
+# Adjust permissions for the WordPress directory
+docker exec CONTAINER_ID chown -R www-data:www-data /var/www/html
+```
+
+Replace `CONTAINER_ID`, `DB_SERVICE_NAME`, `USERNAME`, `PASSWORD`, `DATABASE_NAME`, and `your_database.sql` with your actual container ID, service name, database username, password, database name, and SQL file name. These commands assume that you have a running Docker environment with Docker Compose and that your `docker-compose.yml` file is set up correctly for your WordPress and database services.
