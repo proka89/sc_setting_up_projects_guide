@@ -436,23 +436,36 @@ You can run `docker ps` to see containers info such as `DB_CONTAINER` name.
 
 #### No products is showing on frontend
 
-* Run reindexer from inside the container `bin/magento indexer:reindex`
+Run reindexer from inside the container `bin/magento indexer:reindex`
 
 #### Cached page, no new changes are showing
 
-* Clear cache `bin/magento cache:clean`
+Clear the cache `bin/magento cache:clean`
+Sometimes, you might also need to clear the generated content: `rm -rf var/cache/* var/page_cache/* generated/code/*`.
 
 #### I've changed something inside `app/code/` directory but it's not showing
 
-* Run setup upgrade script `bin/magento setup:upgrade`
+Run setup upgrade script `bin/magento setup:upgrade`
+Also, consider running `bin/magento setup:di:compile` if you're working with dependency injection or plugins.
 
 #### Container run out of memory when performing CLI commands
 
-* Add following before command then run `php -dmemory_limit=2G`
+Add following before command then run `php -dmemory_limit=2G`
 
 #### Apache throws error 500
 
-* SSH into web container and run `a2enmod rewrite` then restart apache2
+SSH into web container and run `a2enmod rewrite` then restart apache2:
+
+```bash
+# Display a list of all active containers. Look for the container that is running your web server and note its CONTAINER ID or NAME.
+docker ps
+
+# SSH into the Docker Container
+docker exec -it [CONTAINER_ID_OR_NAME] /bin/bash
+
+# Restart Apache
+a2enmod rewrite
+```
 
 #### Executor failed running [/bin/sh -c php -d memory_limit=-1 bin/magento setup:upgrade] on `dcu`
 
@@ -469,7 +482,7 @@ You can run `docker ps` to see containers info such as `DB_CONTAINER` name.
     docker-compose up
     ```
 
-3. SSH into uk_team_magnus-web-1 container and run
+3. SSH into web container and run
 
     ```bash
     composer install --ignore-platform-reqs
