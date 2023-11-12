@@ -18,9 +18,9 @@ If you are not already familiar with Docker, it's recommended to start with the 
 - **Building and running your first container**: This section provides practical experience in building and running Docker containers, which is crucial for setting up your development environment.
 - **Docker Compose**: Understanding Docker Compose is essential for managing multi-container applications, like those you'll be creating for WordPress and Magento.
 
-### Setting up WordPress projects via Docker
-
 In the instructions below, we will be using variable such as `project_name` or `database_name`, these should be replaced by the actual project or database names. `database_name` variable will be the name of the demo database dump, which can be found in the root of the project. For example this could look something like `pickles.sql.zip`, in such case you would be using `pickles` instead of `database_name` in the commands below.
+
+### Setting up WordPress projects via Docker
 
 - Clone project from the GitHub repo
 - Unzip demo database dump:
@@ -36,7 +36,7 @@ rm -r __MACOSX
 cp .env.example .env
 ```
 
-- Go into project root directory and just run the containers with:
+- Go into project root directory and run the containers with:
 
 ```bash
 docker-compose build && docker-compose up -d
@@ -162,7 +162,7 @@ dwp db import dump.sql
 
 For more information about `wp-cli`, read [WP-CLI](https://developer.wordpress.org/cli/commands/) documentation.
 
-### Troubleshooting
+### Troubleshooting Docker WordPress setup
 
 Docker commands and scenarios that could be useful for someone managing WordPress environments with Docker. These examples cover various common tasks and troubleshooting scenarios.
 
@@ -254,3 +254,115 @@ docker exec CONTAINER_ID chown -R www-data:www-data /var/www/html
 ```
 
 Replace `CONTAINER_ID`, `DB_SERVICE_NAME`, `USERNAME`, `PASSWORD`, `DATABASE_NAME`, and `your_database.sql` with your actual container ID, service name, database username, password, database name, and SQL file name. These commands assume that you have a running Docker environment with Docker Compose and that your `docker-compose.yml` file is set up correctly for your WordPress and database services.
+
+### Setting up Magento 1 projects via Docker
+Have in mind that these setups are based on alrady existing preconfigured Docker files.
+
+- Clone project from the GitHub repo
+- Unzip demo database dump:
+
+```bash
+unzip -o database_name.sql.zip > database_name.sql
+```
+
+- Go into project root directory and run the containers with:
+
+```bash
+docker-compose up -d
+```
+
+- If you haven't already, you will have to add an entry to hosts file like this:
+
+```bash
+127.0.1.1 project_name.local
+```
+
+- Update local.xml(`app/etc/local.xml`) file with these credentials:
+
+```xml
+<username><![CDATA[magento]]></username>
+<password><![CDATA[secret]]></password>
+<dbname><![CDATA[magento]]></dbname>
+```
+
+- If you have any issues or errors when loading `project_name.local`, delete the cache located in the `/var/cache` folder in project root. Build always takes time so be patient! Magento cache in the admin is probably disabled, which will slow down projects in the local environment.
+
+### Troubleshooting Docker Magento 1 setup
+
+Docker commands and scenarios that could be useful for someone managing Magento 1 environments with Docker. These examples cover various common tasks and troubleshooting scenarios.
+
+#### Checking Container Logs
+
+Logs are often the first place to look when something goes wrong.
+
+```bash
+# View logs of a specific container
+docker logs CONTAINER_ID
+
+# Follow the logs in real-time
+docker logs -f CONTAINER_ID
+```
+
+#### Accessing the Container Shell
+
+Accessing the shell of your container can be invaluable for direct inspection and troubleshooting.
+
+```bash
+# Access shell of a specific container
+docker exec -it CONTAINER_ID /bin/bash
+```
+
+#### Inspecting Containers
+
+Docker's inspect command provides detailed information about a container's configuration and state.
+
+```bash
+# Inspect a specific container
+docker inspect CONTAINER_ID
+```
+
+#### Managing Magento Cache
+
+Clearing the Magento cache can resolve many issues.
+
+```bash
+# Clear Magento cache from the container
+docker exec CONTAINER_ID rm -rf /var/www/html/var/cache/*
+```
+
+#### Database Connectivity
+
+Ensure that your application can connect to the database.
+
+```bash
+# Access MySQL shell
+docker exec -it DB_CONTAINER_ID mysql -uUSERNAME -pPASSWORD
+
+# Check if you can connect to the database from your Magento container
+docker exec CONTAINER_ID mysql -hDB_HOST -uUSERNAME -pPASSWORD -e "SHOW DATABASES;"
+```
+
+#### Restarting Containers
+
+Sometimes, a simple restart can fix a problem.
+
+```bash
+# Restart a specific container
+docker restart CONTAINER_ID
+
+# Restart all containers in docker-compose
+docker-compose restart
+```
+
+#### Checking File Permissions
+
+Incorrect file permissions can cause errors, especially in a Magento environment.
+
+```bash
+# Check file permissions
+docker exec CONTAINER_ID ls -l /var/www/html
+
+# Correct file permissions
+docker exec CONTAINER_ID chmod -R 755 /var/www/html
+docker exec CONTAINER_ID chown -R www-data:www-data /var/www/html
+```
