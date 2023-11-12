@@ -487,3 +487,193 @@ a2enmod rewrite
     ```bash
     composer install --ignore-platform-reqs
     ```
+
+### Setting up WordPress projects via LocalWP
+
+To set WordPress projects locally in a more user friendly way you can use [LocalWP](https://localwp.com/).
+
+- Download the Local WP to your computer
+- Add new local project with default settings and `project_name`, and set site domain to `project_name.local`
+- Clone this project to your `Sites` folder, and from there run this command:
+
+    ```bash
+    rsync -avzhp --progress --exclude 'wp-config.php' . ~/Local\ Sites/project_name/app/public/
+    ```
+
+    Alternatively you can then delete the WordPress files added by Local WP, and clone this project in that place(~/Local Sites/project_name/app/public), and then update the wp-config.php file with these:
+
+    ```bash
+    'DB_NAME': 'local'
+    'DB_USER': 'root'
+    'DB_PASSWORD': 'root'
+    ```
+
+- Import demo database from the project. But to do so first unzip the database:
+
+    ```bash
+    unzip -o database_name.sql.zip > database_name.sql
+    rm -r __MACOSX
+    ```
+
+    Import the database included in the project using the Adminer tool provided in Local. (This is a simple phpMyAdmin alternative.). Or if there are any issues with this you can open the site SSH shell and type:
+
+    ```bash
+    mysql -uroot -proot local < database_name.sql
+    ```
+
+    In case if there are issues with loading the database, you can try to delete and recreate the local wp database from the site shell. First login to mysql with:
+
+    ```bash
+    mysql -uroot -proot
+    ```
+
+    Then delete and recreate WordPress local database, with:
+
+    ```bash
+    drop database local;
+    create database local;
+    exit
+    ```
+
+- Sort out the SSL certificate trust issues by following this [guide](https://localwp.com/help-docs/getting-started/managing-local-sites-ssl-certificate-in-macos/)
+- Test the site by opening WP Admin from Local.
+- Happy coding!
+
+#### LocalWP CLI
+
+To use the WP CLI in your project set with Local WP, you will need to open the SSH shell, and from there you can use WP CLI commands. Some useful commands:
+
+- Export the local database
+
+```bash
+wp db export backup.sql
+```
+
+- Import a local database
+
+```bash
+wp db import backup.sql
+```
+
+- Search and Replace in project database
+
+```bash
+# Useful if you have loaded the database from staging or production
+wp search-replace '.com' '.local'
+wp search-replace '.websitetotal.com' '.local'
+```
+
+- Ggenerate `.pot` file from theme or plugin folder
+
+```bash
+# Make sure this one is run from the correct folder
+wp i18n make-pot . languages/pot_file_name.pot
+```
+
+- List all the plugins
+
+```bash
+wp plugin list
+```
+
+- Update the plugin
+
+```bash
+wp plugin update plugin_name
+```
+
+- Activate the plugin
+
+```bash
+wp plugin activate plugin_name
+```
+
+- Deactivate the plugin
+
+```bash
+wp plugin deactivate plugin_name
+```
+
+- Show only a list of all active plugins which have updates available
+
+```bash
+wp plugin list --field=name --status=active --update=available
+```
+
+- List all users
+
+```bash
+wp user list
+```
+
+- List admin users
+
+```bash
+wp user list --role=administrator
+```
+
+- Create a new administrator user
+
+```bash
+wp user create admin name@stuntcoders.com --role=administrator --user_pass=sc123123
+```
+
+- Update existing administrator user password
+
+```bash
+wp user update USER_ID  --user_pass=sc123123
+```
+
+- Delete the user and reassign that user’s posts to any other user
+
+```bash
+wp user delete USER_ID --reassign=OTHER_USER_ID
+```
+
+- Regenerate all media attachments. Useful when changing image sizes
+
+```bash
+wp media regenerate
+```
+
+- Flushe the WordPress site cache
+
+```bash
+wp cache flush
+```
+
+- List all meta data associated with the specified post
+
+```bash
+wp post meta list POST_ID --format=table
+```
+
+- Get a Specific Meta Field for a Post
+
+```bash
+wp post meta get POST_ID META_KEY
+```
+
+- List All Meta Data for a User
+
+```bash
+wp user meta list USER_ID --format=table
+```
+
+- Get a Specific Meta Field for a User
+
+```bash
+wp user meta get USER_ID META_KEY
+```
+
+- List Rewrite Rules
+
+```bash
+wp rewrite list --format=table
+```
+
+- Export content to an XML file
+
+```bash
+wp export --dir=/path/to/export --user=author --start_date=2021-01-01 --end_date=2021-12-31
+```
