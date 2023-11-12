@@ -20,6 +20,8 @@ If you are not already familiar with Docker, it's recommended to start with the 
 
 In the instructions below, we will be using variable such as `project_name` or `database_name`, these should be replaced by the actual project or database names. `database_name` variable will be the name of the demo database dump, which can be found in the root of the project. For example this could look something like `pickles.sql.zip`, in such case you would be using `pickles` instead of `database_name` in the commands below.
 
+**Have in mind that these setups are based on alrady existing preconfigured Docker files. Always make sure to check project readme file for more specific instructions.**
+
 ### Setting up WordPress projects via Docker
 
 - Clone project from the GitHub repo
@@ -256,9 +258,20 @@ docker exec CONTAINER_ID chown -R www-data:www-data /var/www/html
 Replace `CONTAINER_ID`, `DB_SERVICE_NAME`, `USERNAME`, `PASSWORD`, `DATABASE_NAME`, and `your_database.sql` with your actual container ID, service name, database username, password, database name, and SQL file name. These commands assume that you have a running Docker environment with Docker Compose and that your `docker-compose.yml` file is set up correctly for your WordPress and database services.
 
 ### Setting up Magento 1 projects via Docker
-Have in mind that these setups are based on alrady existing preconfigured Docker files.
 
-- Clone project from the GitHub repo
+- Clone the project from the GitHub repo
+- If you haven't already, you will have to add an entry to hosts file. To open the file run:
+
+```bash
+sudo vim /etc/hosts
+```
+
+At the end of the file add:
+
+```bash
+127.0.1.1 project_name.local
+```
+
 - Unzip demo database dump:
 
 ```bash
@@ -269,12 +282,6 @@ unzip -o database_name.sql.zip > database_name.sql
 
 ```bash
 docker-compose up -d
-```
-
-- If you haven't already, you will have to add an entry to hosts file like this:
-
-```bash
-127.0.1.1 project_name.local
 ```
 
 - Update local.xml(`app/etc/local.xml`) file with these credentials:
@@ -366,3 +373,104 @@ docker exec CONTAINER_ID ls -l /var/www/html
 docker exec CONTAINER_ID chmod -R 755 /var/www/html
 docker exec CONTAINER_ID chown -R www-data:www-data /var/www/html
 ```
+
+Replace `CONTAINER_ID`, `DB_SERVICE_NAME`, `USERNAME`, `PASSWORD`, `DATABASE_NAME`, and `your_database.sql` with your actual container ID, service name, database username, password, database name, and SQL file name. These commands assume that you have a running Docker environment with Docker Compose and that your `docker-compose.yml` file is set up correctly for your WordPress and database services.
+
+### Setting up Magento 2 projects via Docker
+
+- Clone the project from the GitHub repo
+- If you haven't already, you will have to add an entry to hosts file. To open the file run:
+
+```bash
+sudo vim /etc/hosts
+```
+
+At the end of the file add:
+
+```bash
+127.0.0.1 project_name.local
+::1 project_name.local
+```
+
+- Rename `package.json.sample` to `package.json`. You can do this with:
+
+```bash
+cp package.json.sample package.json
+```
+
+- Rename `app/etc/env_local.php` to `app/etc/env.php`. You can do this with:
+
+```bash
+cp app/etc/env_local.php app/etc/env.php
+```
+
+- If there is a WordPress in combination with Magento
+    - Rename `wp/wp-config_local.php` to `wp/wp-config.php`
+    - Change DB_HOST (wp/wp-config) & host (app/etc/env.php) IP address if different then `172.19.0.2` is assigned to your container. To check IP addresses of containers run the following command:
+
+    ```bash
+    docker inspect -f '{{.Name}} - {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps -aq)
+    ```
+
+- Go into project root directory and run the containers with:
+
+```bash
+docker-compose up -d
+```
+
+- Unzip project demo database dumb (`database_name.sql.zip`) and import the database once container is set:
+
+```bash
+unzip -o database_name.sql.zip > database_name.sql
+```
+
+```bash
+docker exec -i DB_CONTAINER mysql -uUSER -pPASSWORD magento < database_name.sql
+```
+
+You can run `docker ps` to see containers info such as `DB_CONTAINER` name.
+
+- Once done, you can visit the site at `project_name.local`
+
+### Troubleshooting Docker Magento 2 setup
+
+#### No products is showing on frontend
+
+* Run reindexer from inside the container `bin/magento indexer:reindex`
+
+#### Cached page, no new changes are showing
+
+* Clear cache `bin/magento cache:clean`
+
+#### I've changed something inside `app/code/` directory but it's not showing
+
+* Run setup upgrade script `bin/magento setup:upgrade`
+
+#### Container run out of memory when performing CLI commands
+
+* Add following before command then run `php -dmemory_limit=2G`
+
+#### Apache throws error 500
+
+* SSH into web container and run `a2enmod rewrite` then restart apache2
+
+#### Executor failed running [/bin/sh -c php -d memory_limit=-1 bin/magento setup:upgrade] on `dcu`
+
+1. Comment out these lines in Dockerfile
+
+    ```bash
+    php -d memory_limit=-1 bin/magento setup:upgrade
+    php -d memory_limit=-1 bin/magento cache:clean
+    ```
+
+2. Start the container
+
+    ```bash
+    docker-compose up
+    ```
+
+3. SSH into uk_team_magnus-web-1 container and run
+
+    ```bash
+    composer install --ignore-platform-reqs
+    ```
