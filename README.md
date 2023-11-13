@@ -9,6 +9,24 @@ This guide aims to provide a step-by-step process for setting up WordPress and M
 - **Basic Command Line Knowledge**: Familiarity with terminal or command prompt commands is required.
 - **Code Editor**: Use any code editor like Visual Studio Code, Sublime Text, etc.
 
+### Table of Contents
+
+- [Setting up projects via Docker](https://github.com/proka89/sc_setting_up_projects_guide#setting-up-projects-via-docker)
+  - [Setting up WordPress projects via Docker](https://github.com/proka89/sc_setting_up_projects_guide#setting-up-wordpress-projects-via-docker)
+  - [Useful docker commands](https://github.com/proka89/sc_setting_up_projects_guide#useful-docker-commands)
+    - [SSH into web container](https://github.com/proka89/sc_setting_up_projects_guide#ssh-into-web-container)
+    - [Update a plugin or theme](https://github.com/proka89/sc_setting_up_projects_guide#update-a-plugin-or-theme)
+    - [Activate or deactivate a plugin or a theme](https://github.com/proka89/sc_setting_up_projects_guide#activate-or-deactivate-a-plugin-or-a-theme)
+    - [Import or Dump a database](https://github.com/proka89/sc_setting_up_projects_guide#import-or-dump-a-database)
+  - [Troubleshooting Docker WordPress setup](https://github.com/proka89/sc_setting_up_projects_guide#troubleshooting-docker-wordpress-setup)
+    - [Importing a Database](https://github.com/proka89/sc_setting_up_projects_guide#importing-a-database)
+    - [Exporting a Database](https://github.com/proka89/sc_setting_up_projects_guide#exporting-a-database)
+    - [Checking WordPress Logs](https://github.com/proka89/sc_setting_up_projects_guide#checking-wordpress-logs)
+    - [Restarting Containers](https://github.com/proka89/sc_setting_up_projects_guide#restarting-containers)
+    - [Accessing MySQL Shell](https://github.com/proka89/sc_setting_up_projects_guide#accessing-mysql-shell)
+    - [Flushing WordPress Cache](https://github.com/proka89/sc_setting_up_projects_guide#flushing-wordpress-cache)
+    - [Troubleshooting WordPress Permissions](https://github.com/proka89/sc_setting_up_projects_guide#troubleshooting-wordpress-permissions)
+
 ## Setting up projects via Docker
 
 If you are not already familiar with Docker, it's recommended to start with the [Docker Getting Started documentation](https://docs.docker.com/get-started/). Key areas to pay special attention to include:
