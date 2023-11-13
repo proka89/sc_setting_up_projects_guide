@@ -27,29 +27,29 @@ In the instructions below, we will be using variable such as `project_name` or `
 - Clone project from the GitHub repo
 - Unzip demo database dump:
 
-```bash
-unzip -o database_name.sql.zip > database_name.sql
-rm -r __MACOSX
-```
+  ```bash
+  unzip -o database_name.sql.zip > database_name.sql
+  rm -r __MACOSX
+  ```
 
 - All database credentials and wp-config.php data are stored in the `.env` file. Run:
 
-```bash
-cp .env.example .env
-```
+  ```bash
+  cp .env.example .env
+  ```
 
 - Go into project root directory and run the containers with:
 
-```bash
-docker-compose build && docker-compose up -d
-```
+  ```bash
+  docker-compose build && docker-compose up -d
+  ```
 
 - If you haven't already, you will have to add an entry to hosts file like this:
 
-```bash
-127.0.0.1 project_name.local
-::1       project_name.local
-```
+  ```bash
+  127.0.0.1 project_name.local
+  ::1       project_name.local
+  ```
 
 An additional container is included that lets you use the `wp-cli` app without having to install it on your local machine.
 
@@ -64,59 +64,59 @@ Next step vould be to open the shell from the terminal with editors such as `vim
 - Type `vim ~/.zshrc` in the Terminal, to open the `.zshrc` file. Then press `i` to enter the `INSERT` mode
 - We will be adding the aliases and two Docker related functions from the snipet below
 
-```bash
-alias docker-compose="docker compose"
-alias dcb="docker-compose build"
-alias dcu="docker-compose up"
-alias dcd="docker-compose down"
-alias dcl="docker-compose exec --user $(id -u):$(id -g) web /bin/bash"
-alias dcdebug="docker-compose down && docker-compose run --service-ports web"
-alias dclc="dockerlogin"
-alias dwp="docker_wpcli"
+  ```bash
+  alias docker-compose="docker compose"
+  alias dcb="docker-compose build"
+  alias dcu="docker-compose up"
+  alias dcd="docker-compose down"
+  alias dcl="docker-compose exec --user $(id -u):$(id -g) web /bin/bash"
+  alias dcdebug="docker-compose down && docker-compose run --service-ports web"
+  alias dclc="dockerlogin"
+  alias dwp="docker_wpcli"
 
-docker_wpcli() {
-  declare ARGS
+  docker_wpcli() {
+    declare ARGS
 
-  # if CWD is not WordPress project, exit
-  if ! [[ -d ./wp-includes && -d ./wp-admin && -d ./wp-content ]]; then
-    echo 'Not in WordPress project.'
-    return 1
-  fi
+    # if CWD is not WordPress project, exit
+    if ! [[ -d ./wp-includes && -d ./wp-admin && -d ./wp-content ]]; then
+      echo 'Not in WordPress project.'
+      return 1
+    fi
 
-  # If WordPress and DB are not running, exit
-  CWD=${PWD##*/}
-  CONTAINERS_ACTIVE=$(docker ps | grep $CWD |  wc -l)
+    # If WordPress and DB are not running, exit
+    CWD=${PWD##*/}
+    CONTAINERS_ACTIVE=$(docker ps | grep $CWD |  wc -l)
 
-   if [ $CONTAINERS_ACTIVE -lt 2 ]; then
-    echo 'Start WordPress and Database containers first.'
-    return 1
-  fi
+    if [ $CONTAINERS_ACTIVE -lt 2 ]; then
+      echo 'Start WordPress and Database containers first.'
+      return 1
+    fi
 
-  # if container already exists, recreate it
-  COUNT=$(docker ps -a | grep wp_cli | wc -l)
+    # if container already exists, recreate it
+    COUNT=$(docker ps -a | grep wp_cli | wc -l)
 
-  if [ $COUNT -gt 0 ]; then
-    echo Recreating wp_cli container..
-    docker rm wp_cli
-  fi
+    if [ $COUNT -gt 0 ]; then
+      echo Recreating wp_cli container..
+      docker rm wp_cli
+    fi
 
-  # If no arguments are passed, display wp info
-  if [ $# -eq 0 ]; then
-    ARGS="--info"
-  else
-    ARGS=("$@")
-  fi
+    # If no arguments are passed, display wp info
+    if [ $# -eq 0 ]; then
+      ARGS="--info"
+    else
+      ARGS=("$@")
+    fi
 
-  docker-compose run --name wp_cli --rm wp_cli "${ARGS[@]}"
-}
+    docker-compose run --name wp_cli --rm wp_cli "${ARGS[@]}"
+  }
 
-dockerlogin() {
-  if [ -n "$1" ]
-  then
-    docker-compose exec --user $(id -u):$(id -g) $1 /bin/bash
-  fi
-}
-```
+  dockerlogin() {
+    if [ -n "$1" ]
+    then
+      docker-compose exec --user $(id -u):$(id -g) $1 /bin/bash
+    fi
+  }
+  ```
 
 - Press `esc` on the keyboard to exit the `INSERT` mode, and then type `:wq` to save the changes and exit from the file.
 
@@ -262,35 +262,35 @@ Replace `CONTAINER_ID`, `DB_SERVICE_NAME`, `USERNAME`, `PASSWORD`, `DATABASE_NAM
 - Clone the project from the GitHub repo
 - If you haven't already, you will have to add an entry to hosts file. To open the file run:
 
-```bash
-sudo vim /etc/hosts
-```
+  ```bash
+  sudo vim /etc/hosts
+  ```
 
-At the end of the file add:
+  At the end of the file add:
 
-```bash
-127.0.1.1 project_name.local
-```
+  ```bash
+  127.0.1.1 project_name.local
+  ```
 
 - Unzip demo database dump:
 
-```bash
-unzip -o database_name.sql.zip > database_name.sql
-```
+  ```bash
+  unzip -o database_name.sql.zip > database_name.sql
+  ```
 
 - Go into project root directory and run the containers with:
 
-```bash
-docker-compose up -d
-```
+  ```bash
+  docker-compose up -d
+  ```
 
 - Update local.xml(`app/etc/local.xml`) file with these credentials:
 
-```xml
-<username><![CDATA[magento]]></username>
-<password><![CDATA[secret]]></password>
-<dbname><![CDATA[magento]]></dbname>
-```
+  ```xml
+  <username><![CDATA[magento]]></username>
+  <password><![CDATA[secret]]></password>
+  <dbname><![CDATA[magento]]></dbname>
+  ```
 
 - If you have any issues or errors when loading `project_name.local`, delete the cache located in the `/var/cache` folder in project root. Build always takes time so be patient! Magento cache in the admin is probably disabled, which will slow down projects in the local environment.
 
@@ -381,36 +381,36 @@ Replace `CONTAINER_ID`, `DB_SERVICE_NAME`, `USERNAME`, `PASSWORD`, `DATABASE_NAM
 - Clone the project from the GitHub repo
 - If you haven't already, you will have to add an entry to hosts file. To open the file run:
 
-```bash
-sudo vim /etc/hosts
-```
+  ```bash
+  sudo vim /etc/hosts
+  ```
 
-At the end of the file add:
+  At the end of the file add:
 
-```bash
-127.0.0.1 project_name.local
-::1 project_name.local
-```
+  ```bash
+  127.0.0.1 project_name.local
+  ::1 project_name.local
+  ```
 
 - Rename `package.json.sample` to `package.json`. You can do this with:
 
-```bash
-cp package.json.sample package.json
-```
+  ```bash
+  cp package.json.sample package.json
+  ```
 
 - Rename `app/etc/env_local.php` to `app/etc/env.php`. You can do this with:
 
-```bash
-cp app/etc/env_local.php app/etc/env.php
-```
+  ```bash
+  cp app/etc/env_local.php app/etc/env.php
+  ```
 
 - If there is a WordPress in combination with Magento
     - Rename `wp/wp-config_local.php` to `wp/wp-config.php`
     - Change DB_HOST (wp/wp-config) & host (app/etc/env.php) IP address if different then `172.19.0.2` is assigned to your container. To check IP addresses of containers run the following command:
 
-    ```bash
-    docker inspect -f '{{.Name}} - {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps -aq)
-    ```
+      ```bash
+      docker inspect -f '{{.Name}} - {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps -aq)
+      ```
 
 - Go into project root directory and run the containers with:
 
@@ -420,13 +420,13 @@ docker-compose up -d
 
 - Unzip project demo database dumb (`database_name.sql.zip`) and import the database once container is set:
 
-```bash
-unzip -o database_name.sql.zip > database_name.sql
-```
+  ```bash
+  unzip -o database_name.sql.zip > database_name.sql
+  ```
 
-```bash
-docker exec -i DB_CONTAINER mysql -uUSER -pPASSWORD magento < database_name.sql
-```
+  ```bash
+  docker exec -i DB_CONTAINER mysql -uUSER -pPASSWORD magento < database_name.sql
+  ```
 
 You can run `docker ps` to see containers info such as `DB_CONTAINER` name.
 
@@ -500,7 +500,7 @@ To set WordPress projects locally in a more user friendly way you can use [Local
     rsync -avzhp --progress --exclude 'wp-config.php' . ~/Local\ Sites/project_name/app/public/
     ```
 
-    Alternatively you can then delete the WordPress files added by Local WP, and clone this project in that place(~/Local Sites/project_name/app/public), and then update the wp-config.php file with these:
+    Alternatively you can delete the WordPress files added by Local WP, and clone this project in that place(~/Local Sites/project_name/app/public), and then update the wp-config.php file with these:
 
     ```bash
     'DB_NAME': 'local'
@@ -545,135 +545,135 @@ To use the WP CLI in your project set with Local WP, you will need to open the S
 
 - Export the local database
 
-```bash
-wp db export backup.sql
-```
+  ```bash
+  wp db export backup.sql
+  ```
 
 - Import a local database
 
-```bash
-wp db import backup.sql
-```
+  ```bash
+  wp db import backup.sql
+  ```
 
 - Search and Replace in project database
 
-```bash
-# Useful if you have loaded the database from staging or production
-wp search-replace '.com' '.local'
-wp search-replace '.websitetotal.com' '.local'
-```
+  ```bash
+  # Useful if you have loaded the database from staging or production
+  wp search-replace '.com' '.local'
+  wp search-replace '.websitetotal.com' '.local'
+  ```
 
 - Ggenerate `.pot` file from theme or plugin folder
 
-```bash
-# Make sure this one is run from the correct folder
-wp i18n make-pot . languages/pot_file_name.pot
-```
+  ```bash
+  # Make sure this one is run from the correct folder
+  wp i18n make-pot . languages/pot_file_name.pot
+  ```
 
 - List all the plugins
 
-```bash
-wp plugin list
-```
+  ```bash
+  wp plugin list
+  ```
 
 - Update the plugin
 
-```bash
-wp plugin update plugin_name
-```
+  ```bash
+  wp plugin update plugin_name
+  ```
 
 - Activate the plugin
 
-```bash
-wp plugin activate plugin_name
-```
+  ```bash
+  wp plugin activate plugin_name
+  ```
 
 - Deactivate the plugin
 
-```bash
-wp plugin deactivate plugin_name
-```
+  ```bash
+  wp plugin deactivate plugin_name
+  ```
 
 - Show only a list of all active plugins which have updates available
 
-```bash
-wp plugin list --field=name --status=active --update=available
-```
+  ```bash
+  wp plugin list --field=name --status=active --update=available
+  ```
 
 - List all users
 
-```bash
-wp user list
-```
+  ```bash
+  wp user list
+  ```
 
 - List admin users
 
-```bash
-wp user list --role=administrator
-```
+  ```bash
+  wp user list --role=administrator
+  ```
 
 - Create a new administrator user
 
-```bash
-wp user create admin name@stuntcoders.com --role=administrator --user_pass=sc123123
-```
+  ```bash
+  wp user create admin name@stuntcoders.com --role=administrator --user_pass=sc123123
+  ```
 
 - Update existing administrator user password
 
-```bash
-wp user update USER_ID  --user_pass=sc123123
-```
+  ```bash
+  wp user update USER_ID  --user_pass=sc123123
+  ```
 
 - Delete the user and reassign that user’s posts to any other user
 
-```bash
-wp user delete USER_ID --reassign=OTHER_USER_ID
-```
+  ```bash
+  wp user delete USER_ID --reassign=OTHER_USER_ID
+  ```
 
 - Regenerate all media attachments. Useful when changing image sizes
 
-```bash
-wp media regenerate
-```
+  ```bash
+  wp media regenerate
+  ```
 
 - Flushe the WordPress site cache
 
-```bash
-wp cache flush
-```
+  ```bash
+  wp cache flush
+  ```
 
 - List all meta data associated with the specified post
 
-```bash
-wp post meta list POST_ID --format=table
-```
+  ```bash
+  wp post meta list POST_ID --format=table
+  ```
 
 - Get a Specific Meta Field for a Post
 
-```bash
-wp post meta get POST_ID META_KEY
-```
+  ```bash
+  wp post meta get POST_ID META_KEY
+  ```
 
 - List All Meta Data for a User
 
-```bash
-wp user meta list USER_ID --format=table
-```
+  ```bash
+  wp user meta list USER_ID --format=table
+  ```
 
 - Get a Specific Meta Field for a User
 
-```bash
-wp user meta get USER_ID META_KEY
-```
+  ```bash
+  wp user meta get USER_ID META_KEY
+  ```
 
 - List Rewrite Rules
 
-```bash
-wp rewrite list --format=table
-```
+  ```bash
+  wp rewrite list --format=table
+  ```
 
 - Export content to an XML file
 
-```bash
-wp export --dir=/path/to/export --user=author --start_date=2021-01-01 --end_date=2021-12-31
-```
+  ```bash
+  wp export --dir=/path/to/export --user=author --start_date=2021-01-01 --end_date=2021-12-31
+  ```
