@@ -414,9 +414,9 @@ Replace `CONTAINER_ID`, `DB_SERVICE_NAME`, `USERNAME`, `PASSWORD`, `DATABASE_NAM
 
 - Go into project root directory and run the containers with:
 
-```bash
-docker-compose up -d
-```
+  ```bash
+  docker-compose up -d
+  ```
 
 - Unzip project demo database dumb (`database_name.sql.zip`) and import the database once container is set:
 
@@ -441,11 +441,13 @@ Run reindexer from inside the container `bin/magento indexer:reindex`
 #### Cached page, no new changes are showing
 
 Clear the cache `bin/magento cache:clean`
+
 Sometimes, you might also need to clear the generated content: `rm -rf var/cache/* var/page_cache/* generated/code/*`.
 
 #### I've changed something inside `app/code/` directory but it's not showing
 
 Run setup upgrade script `bin/magento setup:upgrade`
+
 Also, consider running `bin/magento setup:di:compile` if you're working with dependency injection or plugins.
 
 #### Container run out of memory when performing CLI commands
