@@ -35,6 +35,16 @@ This guide aims to provide a step-by-step process for setting up WordPress and M
     - [Database Connectivity](https://github.com/proka89/sc_setting_up_projects_guide#database-connectivity)
     - [Restarting Containers](https://github.com/proka89/sc_setting_up_projects_guide#restarting-containers-1)
     - [Checking File Permissions](https://github.com/proka89/sc_setting_up_projects_guide#checking-file-permissions)
+  - [Setting up Magento 2 projects via Docker](https://github.com/proka89/sc_setting_up_projects_guide#setting-up-magento-2-projects-via-docker)
+  - [Troubleshooting Docker Magento 2 setup](https://github.com/proka89/sc_setting_up_projects_guide#troubleshooting-docker-magento-2-setup)
+    - [No products is showing on frontend](https://github.com/proka89/sc_setting_up_projects_guide#no-products-is-showing-on-frontend)
+    - [Cached page, no new changes are showing](https://github.com/proka89/sc_setting_up_projects_guide#cached-page-no-new-changes-are-showing)
+    - [I've changed something inside `app/code/` directory but it's not showing](https://github.com/proka89/sc_setting_up_projects_guide#ive-changed-something-inside-appcode-directory-but-its-not-showing)
+    - [Container run out of memory when performing CLI commands](https://github.com/proka89/sc_setting_up_projects_guide#container-run-out-of-memory-when-performing-cli-commands)
+    - [Apache throws error 500](https://github.com/proka89/sc_setting_up_projects_guide#apache-throws-error-500)
+    - [Executor failed running `/bin/sh -c php -d memory_limit=-1 bin/magento setup:upgrade` on `dcu`](https://github.com/proka89/sc_setting_up_projects_guide#executor-failed-running-binsh--c-php--d-memory_limit-1-binmagento-setupupgrade-on-dcu)
+- [Setting up WordPress projects via LocalWP](https://github.com/proka89/sc_setting_up_projects_guide#setting-up-wordpress-projects-via-localwp)
+    - [LocalWP CLI](https://github.com/proka89/sc_setting_up_projects_guide#localwp-cli)
 
 ## Setting up projects via Docker
 
@@ -517,7 +527,7 @@ a2enmod rewrite
     composer install --ignore-platform-reqs
     ```
 
-### Setting up WordPress projects via LocalWP
+## Setting up WordPress projects via LocalWP
 
 To set WordPress projects locally in a more user friendly way you can use [LocalWP](https://localwp.com/).
 
@@ -568,7 +578,7 @@ To set WordPress projects locally in a more user friendly way you can use [Local
 - Test the site by opening WP Admin from Local.
 - Happy coding!
 
-#### LocalWP CLI
+### LocalWP CLI
 
 To use the WP CLI in your project set with Local WP, you will need to open the SSH shell, and from there you can use WP CLI commands. Some useful commands:
 
