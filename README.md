@@ -26,6 +26,15 @@ This guide aims to provide a step-by-step process for setting up WordPress and M
     - [Accessing MySQL Shell](https://github.com/proka89/sc_setting_up_projects_guide#accessing-mysql-shell)
     - [Flushing WordPress Cache](https://github.com/proka89/sc_setting_up_projects_guide#flushing-wordpress-cache)
     - [Troubleshooting WordPress Permissions](https://github.com/proka89/sc_setting_up_projects_guide#troubleshooting-wordpress-permissions)
+  - [Setting up Magento 1 projects via Docker](https://github.com/proka89/sc_setting_up_projects_guide#setting-up-magento-1-projects-via-docker)
+  - [Troubleshooting Docker Magento 1 setup](https://github.com/proka89/sc_setting_up_projects_guide#troubleshooting-docker-magento-1-setup)
+    - [Checking Container Logs](https://github.com/proka89/sc_setting_up_projects_guide#checking-container-logs)
+    - [Accessing the Container Shell](https://github.com/proka89/sc_setting_up_projects_guide#accessing-the-container-shell)
+    - [Inspecting Containers](https://github.com/proka89/sc_setting_up_projects_guide#inspecting-containers)
+    - [Managing Magento Cache](https://github.com/proka89/sc_setting_up_projects_guide#managing-magento-cache)
+    - [Database Connectivity](https://github.com/proka89/sc_setting_up_projects_guide#database-connectivity)
+    - [Restarting Containers](https://github.com/proka89/sc_setting_up_projects_guide#restarting-containers-1)
+    - [Checking File Permissions](https://github.com/proka89/sc_setting_up_projects_guide#checking-file-permissions)
 
 ## Setting up projects via Docker
 
