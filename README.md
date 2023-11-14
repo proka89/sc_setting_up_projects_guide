@@ -55,6 +55,10 @@ This guide aims to provide a step-by-step process for setting up WordPress and M
   - [View full error in var/report folder](https://github.com/proka89/sc_setting_up_projects_guide#view-full-error-in-varreport-folder)
   - [Rename errors/local.xml.sample file](https://github.com/proka89/sc_setting_up_projects_guide#rename-errorslocalxmlsample-file)
   - [Edit index.php file](https://github.com/proka89/sc_setting_up_projects_guide#edit-indexphp-file)
+- [Debugging in Magento 2.x](https://github.com/proka89/sc_setting_up_projects_guide#debugging-in-magento-2x)
+  - [View full error in var/report folder](https://github.com/proka89/sc_setting_up_projects_guide#view-full-error-in-varreport-folder-1)
+  - [Rename errors/local.xml.sample file](https://github.com/proka89/sc_setting_up_projects_guide#rename-errorslocalxmlsample-file-1)
+  - [Edit app/bootstrap.php file](https://github.com/proka89/sc_setting_up_projects_guide#edit-appbootstrapphp-file)
 
 ## Setting up projects via Docker
 
