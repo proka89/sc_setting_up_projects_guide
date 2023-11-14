@@ -716,3 +716,90 @@ To use the WP CLI in your project set with Local WP, you will need to open the S
   ```bash
   wp export --dir=/path/to/export --user=author --start_date=2021-01-01 --end_date=2021-12-31
   ```
+
+## Debugging in WordPress
+
+Debugging in WordPress is a crucial skill for developers, as it helps identify and resolve issues within themes, plugins, or the WordPress core itself. Here are some general rules and advice for debugging in WordPress:
+
+### Enabling Debug Mode
+
+- Enable WP_DEBUG:
+  - Edit the `wp-config.php` file in your WordPress root directory.
+  - Set `WP_DEBUG` to `true`. This enables the debug mode in WordPress.
+    ```php
+    define('WP_DEBUG', true);
+    ```
+  - This will start displaying PHP errors, notices, and warnings.
+- Log Errors to a File:
+  - In `wp-config.php`, you can also enable `WP_DEBUG_LOG` to save these errors to a `debug.log` file within the `wp-content` directory.
+    ```php
+    define('WP_DEBUG_LOG', true);
+    ```
+- Display Errors on the Page:
+  - To display errors directly on the web page (useful in a local development environment), set `WP_DEBUG_DISPLAY` to `true`.
+    ```php
+    define('WP_DEBUG_DISPLAY', true);
+    ```
+  - In a production environment, it's recommended to set this to `false` to prevent visitors from seeing errors.
+
+Usual combination will look, something like this:
+
+```php
+define( 'WP_DEBUG', true );
+define( 'WP_DEBUG_LOG', true );
+define( 'WP_DEBUG_DISPLAY', false );
+@ini_set( 'display_errors', 0 );
+```
+
+This will ensure that WordPress will save errors to `wp-content/debug.log`, and no errors will be shown on the web page. **Regularly check this file for any new warnings or errors.**
+
+### Debugging with Plugins
+
+- Query Monitor:
+  - Install the [Query Monitor plugin](https://wordpress.org/plugins/query-monitor/). It provides a detailed analysis of database queries, hooks, conditionals, HTTP requests, redirects, and more.
+  - It's particularly useful for identifying slow queries or hooks that may be affecting performance.
+  - More in depth guide, can be found in this [article](https://kinsta.com/blog/query-monitor/).
+- WP Crontrol:
+  - [WP Crontrol](https://wordpress.org/plugins/wp-crontrol/) plugin allows you to view and control what's happening in the WP-Cron system. It's useful for debugging issues with scheduled events in WordPress.
+- User Switching:
+  - [User Switching](https://wordpress.org/plugins/user-switching/) plugin is a handy tool for developers and administrators. It allows you to quickly switch between user accounts in WordPress at the click of a button. It's great for testing different user roles and capabilities.
+
+Have in mind that these plugins in most cases should be installed only when needed, and removed after there is no more need for them.
+
+### Code-Level Debugging
+
+- Using `error_log()`:
+  - You can use the `error_log()` function in PHP to add custom error messages or variable values to the WordPress `debug.log` file.
+    ```php
+    error_log( print_r( $your_variable, true ) );
+    ```
+  - This is useful for tracking the values of variables at specific points in your code.
+- Var Dump and Print_R:
+  - Use `var_dump()` or `print_r()` to output the contents of a variable, usually for debugging purposes directly on the web page.
+    ```php
+    var_dump( $your_variable );
+    print_r( $your_variable );
+    ```
+  - Have in mind that `pring_r()` displays information about a variable in a way that's readable by humans, which means that output will be better formatted, and the data we are trying to see will be presented in a more readable format. We can do something similar with `var_dump()`, by using something like this:
+    ```php
+    echo '<pre>' , var_dump( $your_variable ) , '</pre>';
+    ```
+  - Remember to remove or comment out these calls before pushing your code to production.
+
+### Debugging Themes and Plugins
+
+- Deactivate All Plugins:
+  - If you're encountering issues, try deactivating all plugins. If the issue resolves, reactivate them one by one to identify the culprit.
+- Switch to a Default Theme:
+  - Temporarily switch to a default WordPress theme (like Twenty Twenty-One) to see if the issue is theme-related.
+
+### LocalWP tools
+
+- Xdebug:
+  - Using Xdebug for profiling is a powerful way to identify performance bottlenecks in your PHP code, including WordPress and other web applications. Xdebug is a PHP extension that provides debugging and profiling capabilities. If you are using LocalWP for setting up your local WP projects, you can easily enable or disable this extension with one click.
+  - You can find more about how to use and set this extension on LocalWP, in this user guide: [Xdebug within Local](https://localwp.com/help-docs/advanced/using-xdebug-within-local/)
+  - **Have in mind that Xdebug can make your site really slow, so enable this extension only if you need it.** Since Xdebug hooks into every part of PHP, it can cause complex sites to run slower than it would without Xdebug. If you are not able to disable Xdebug directly from the LocalWP user interface, to disable it follow [these](https://community.localwp.com/t/how-can-i-disable-the-xdebug-php-extension/18120) instructions. To make LocalWP even faster, you can update `max_execution_time`, `max_input_time`, `max_input_vars` and `memory_limit` in the same file mentioned in the instructions above.
+- Mailhog:
+  - To make debugging easier, LocalWP uses Mailhog modules to log all the emails for use in debugging and troubleshooting. You don't need an extra mail server to test the mail functionality.
+  - To view the email logs, you can go to the `Utilities` tab, then select `Open Mailhog`. You can see email logs.
+  - You can find more about Mailhog in this Kinsta [article](https://kinsta.com/blog/mailhog/).
