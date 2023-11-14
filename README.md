@@ -59,6 +59,13 @@ This guide aims to provide a step-by-step process for setting up WordPress and M
   - [View full error in var/report folder](https://github.com/proka89/sc_setting_up_projects_guide#view-full-error-in-varreport-folder-1)
   - [Rename errors/local.xml.sample file](https://github.com/proka89/sc_setting_up_projects_guide#rename-errorslocalxmlsample-file-1)
   - [Edit app/bootstrap.php file](https://github.com/proka89/sc_setting_up_projects_guide#edit-appbootstrapphp-file)
+- [How to use staging or production database in your local setup](https://github.com/proka89/sc_setting_up_projects_guide#how-to-use-staging-or-production-database-in-your-local-setup)
+  - [How to dump database on the server](https://github.com/proka89/sc_setting_up_projects_guide#how-to-dump-database-on-the-server)
+  - [Download database dump from the server](https://github.com/proka89/sc_setting_up_projects_guide#download-database-dump-from-the-server)
+  - [Delete database dump from the server](https://github.com/proka89/sc_setting_up_projects_guide#delete-database-dump-from-the-server)
+  - [Search and Replace](https://github.com/proka89/sc_setting_up_projects_guide#search-and-replace)
+    - [Search and Replace for WordPress projects](https://github.com/proka89/sc_setting_up_projects_guide#search-and-replace-for-wordpress-projects)
+    - [Search and Replace for Magento projects](https://github.com/proka89/sc_setting_up_projects_guide#search-and-replace-for-magento-projects)
 
 ## Setting up projects via Docker
 
@@ -1025,7 +1032,7 @@ First prerequisite here is that you actually have the access to the staging or p
   exit;
   ```
 
-### Download database from the server
+### Download database dump from the server
 
 To download the database dump from your server to your local machine, you can use `scp` (secure copy), which is a part of the SSH suite of tools. `scp` allows files to be copied to, from, or between different hosts. It uses the same authentication and provides the same security as SSH.
 
