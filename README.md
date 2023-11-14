@@ -1134,7 +1134,7 @@ Magento stores base URLs in its database, so you'll need to update them for your
     After updating the URLs, you need to clear the Magento cache to ensure the changes take effect.
 
     - If you have access to the Magento admin panel, navigate to System > Cache Management, and clear the cache.
-    - Alternatively, you can manually clear the cache by deleting the contents of the var/cache directory in your Magento installation.
+    - Alternatively, you can manually clear the cache by deleting the contents of the `var/cache` directory in your Magento installation.
 
     For Magento 2, you might need to reindex after making changes to the database.
 
