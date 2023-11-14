@@ -44,7 +44,13 @@ This guide aims to provide a step-by-step process for setting up WordPress and M
     - [Apache throws error 500](https://github.com/proka89/sc_setting_up_projects_guide#apache-throws-error-500)
     - [Executor failed running `/bin/sh -c php -d memory_limit=-1 bin/magento setup:upgrade` on `dcu`](https://github.com/proka89/sc_setting_up_projects_guide#executor-failed-running-binsh--c-php--d-memory_limit-1-binmagento-setupupgrade-on-dcu)
 - [Setting up WordPress projects via LocalWP](https://github.com/proka89/sc_setting_up_projects_guide#setting-up-wordpress-projects-via-localwp)
-    - [LocalWP CLI](https://github.com/proka89/sc_setting_up_projects_guide#localwp-cli)
+  - [LocalWP CLI](https://github.com/proka89/sc_setting_up_projects_guide#localwp-cli)
+- [Debugging in WordPress](https://github.com/proka89/sc_setting_up_projects_guide#debugging-in-wordpress)
+  - [Enabling Debug Mode](https://github.com/proka89/sc_setting_up_projects_guide#enabling-debug-mode)
+  - [Debugging with Plugins](https://github.com/proka89/sc_setting_up_projects_guide#debugging-with-plugins)
+  - [Code-Level Debugging](https://github.com/proka89/sc_setting_up_projects_guide#code-level-debugging)
+  - [Debugging Themes and Plugins](https://github.com/proka89/sc_setting_up_projects_guide#debugging-themes-and-plugins)
+  - [LocalWP tools](https://github.com/proka89/sc_setting_up_projects_guide#localwp-tools)
 
 ## Setting up projects via Docker
 
@@ -786,7 +792,7 @@ Have in mind that these plugins in most cases should be installed only when need
     print_r( $your_variable );
     ```
   - Have in mind that `pring_r()` displays information about a variable in a way that's readable by humans, which means that output will be better formatted, and the data we are trying to see will be presented in a more readable format. We can do something similar with `var_dump()`, by using something like this:
-  
+
     ```php
     echo '<pre>' , var_dump( $your_variable ) , '</pre>';
     ```
