@@ -815,3 +815,32 @@ Have in mind that these plugins in most cases should be installed only when need
   - To make debugging easier, LocalWP uses Mailhog modules to log all the emails for use in debugging and troubleshooting. You don't need an extra mail server to test the mail functionality.
   - To view the email logs, you can go to the `Utilities` tab, then select `Open Mailhog`. You can see email logs.
   - You can find more about Mailhog in this Kinsta [article](https://kinsta.com/blog/mailhog/).
+
+## Debugging in Magento 1.x
+
+In Magento 1.x, the full error display on frontend is disabled by default.
+
+### View full error in var/report folder
+
+In cases when some fatal error happens, we will see something like this:
+
+```bash
+There has been an error processing your request
+
+Exception printing is disabled by default for security reasons.
+
+Error log record number: 912455321715
+```
+
+You can see in the message above that error log record number for this error message is: `912455321715`.
+
+To see the full error you need to go to your project `root`, and then to the `var/report` folder, and find a file with the name which is equal to the error log record number. So in our case, we would have something like this in our project root:
+
+```
+    var/
+    |__report/
+    |   |__ 912455321715
+    |   |.. ...
+```
+
+
