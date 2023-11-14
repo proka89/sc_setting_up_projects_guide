@@ -726,17 +726,20 @@ Debugging in WordPress is a crucial skill for developers, as it helps identify a
 - Enable WP_DEBUG:
   - Edit the `wp-config.php` file in your WordPress root directory.
   - Set `WP_DEBUG` to `true`. This enables the debug mode in WordPress.
+
     ```php
     define('WP_DEBUG', true);
     ```
   - This will start displaying PHP errors, notices, and warnings.
 - Log Errors to a File:
   - In `wp-config.php`, you can also enable `WP_DEBUG_LOG` to save these errors to a `debug.log` file within the `wp-content` directory.
+
     ```php
     define('WP_DEBUG_LOG', true);
     ```
 - Display Errors on the Page:
   - To display errors directly on the web page (useful in a local development environment), set `WP_DEBUG_DISPLAY` to `true`.
+
     ```php
     define('WP_DEBUG_DISPLAY', true);
     ```
@@ -770,17 +773,20 @@ Have in mind that these plugins in most cases should be installed only when need
 
 - Using `error_log()`:
   - You can use the `error_log()` function in PHP to add custom error messages or variable values to the WordPress `debug.log` file.
+
     ```php
     error_log( print_r( $your_variable, true ) );
     ```
   - This is useful for tracking the values of variables at specific points in your code.
 - Var Dump and Print_R:
   - Use `var_dump()` or `print_r()` to output the contents of a variable, usually for debugging purposes directly on the web page.
+
     ```php
     var_dump( $your_variable );
     print_r( $your_variable );
     ```
   - Have in mind that `pring_r()` displays information about a variable in a way that's readable by humans, which means that output will be better formatted, and the data we are trying to see will be presented in a more readable format. We can do something similar with `var_dump()`, by using something like this:
+  
     ```php
     echo '<pre>' , var_dump( $your_variable ) , '</pre>';
     ```
