@@ -885,3 +885,74 @@ You can edit the `index.php` file in your project `root`.
 
   ini_set('display_errors', 1);
   ```
+
+## Debugging in Magento 2.x
+
+In Magento 2.x, just like in the case of Magento 1.x, the full error display on frontend is disabled by default.
+
+### View full error in var/report folder
+
+In cases when some fatal error happens, we will see something like this:
+
+```bash
+There has been an error processing your request
+
+Exception printing is disabled by default for security reasons.
+
+Error log record number: 912455321715
+```
+
+You can see in the message above that error log record number for this error message is: `912455321715`.
+
+To see the full error you need to go to your project `root`, and then to the `var/report` folder, and find a file with the name which is equal to the error log record number. So in our case, we would have something like this in our project root:
+
+```
+    var/
+    |__report/
+    |   |__ 912455321715
+    |   |.. ...
+```
+
+### Rename errors/local.xml.sample file
+
+We can just rename `local.xml.sample` which is inside our project root, `pub/errors` folder. You just need to:
+
+- Rename `local.xml.sample` to `local.xml`
+- Refresh Cache from your Magento Admin (System -> Tools -> Cache Management).
+
+After this you will see error messages directly on you web page.
+
+### Edit app/bootstrap.php file
+
+- Go to your project `root` directory
+- Got to the `app` folder and open `bootstrap.php` file
+- At the beginning of the file, you will see the following line of code:
+
+  ```php
+  #ini_set('display_errors', 1);
+  ```
+
+- Change that into this:
+
+  ```php
+  error_reporting(E_ALL);
+  ini_set('display_errors', 1);
+  ```
+
+- Save the file, and go to your project `root` directory and run:
+
+  ```bash
+  php bin/magento deploy:mode:set developer
+  ```
+
+- Check the current deploy mode with the following command:
+
+  ```bash
+  php bin/magento deploy:mode:show
+  ```
+
+- Clear the Cache
+
+  ```bash
+  php bin/magento cache:clean
+  ```
