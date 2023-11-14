@@ -960,3 +960,179 @@ After this you will see error messages directly on you web page.
   ```bash
   php bin/magento cache:clean
   ```
+
+## How to use staging or production database in your local setup
+
+In some cases you might encounter situations that you do not have all the necessary data in the project demo database dump, or you will have to quickly reproduce the issues which are noticed on the staging or production servers, so in such cases you will have to use a database from staging or production website in your local setup.
+
+### How to dump database on the server
+
+First prerequisite here is that you actually have the access to the staging or production server. If not, this guide will not be useful to you, and you will have to ask from someone else to provide the database for you.
+
+- First SSH to staging or production server. From the terminal type this:
+
+  ```bash
+  ssh user_name@server_address
+  ```
+
+  Replace `user_name` with your actual `user_name` on the server and `server_address` with the server's IP address or domain name. You can usually see the appropriate `user_name` and `server_address`, in the deployment scripts used on the project (Fabric, Capistrano...). For example, to connect to a server with the IP `192.168.1.100` as user `john`, you would use:
+
+  ```bash
+  ssh john@192.168.1.100
+  ```
+
+- Navigate to WordPress Directory. This is typically in a directory like `/var/www/yourwebsite` or `/public_html`. And can also be seen as the `deploy_path`, in the deployment scripts used on the project. It should look something like this:
+
+  ```bash
+  cd /home/user_name/www
+
+  #Or
+
+  cd /home/user_name/web/server_address/
+  ```
+
+- Locate Database Credentials. These are stored in the `wp-config.php` file in your WordPress directory. You can use `vim` or `nano` to open this file directly on the server:
+
+  ```bash
+  vim wp-config.php
+  ```
+
+  It should show you something like this:
+
+  ```php
+  define('DB_NAME', 'your_db_name');
+  define('DB_USER', 'your_db_username');
+  define('DB_PASSWORD', 'your_db_password');
+  ```
+
+- Dump the Database. Now, use the `mysqldump` command to dump the database. Replace `your_db_name`, `your_db_username`, and `your_db_password` with the actual values you found in the `wp-config.php` file. Also, replace `your_backup.sql` with the desired name for your backup file.
+
+  ```bash
+  mysqldump -u your_db_username -p your_db_password your_db_name > your_backup.sql
+  ```
+
+  In most cases you will be able to just do this:
+
+  ```bash
+  mysqldump -uroot your_db_name > your_backup.sql
+  ```
+
+  If you can login to `mysql` with just `-uroot`, then you can check the database name directly there, and skip the `wp-config.php` check:
+
+  ```bash
+  mysql -uroot
+  show databases;
+  exit;
+  ```
+
+### Download database from the server
+
+To download the database dump from your server to your local machine, you can use `scp` (secure copy), which is a part of the SSH suite of tools. `scp` allows files to be copied to, from, or between different hosts. It uses the same authentication and provides the same security as SSH.
+
+- Basic SCP Command:
+
+  ```bash
+  scp username@your_server_ip:/path/to/your_backup.sql /local/directory
+  ```
+
+  Replace `username` with your SSH `username`, `your_server_ip` with the `IP` address or `hostname` of your server, `/path/to/your_backup.sql` with the full path to the database dump file on your server, and `/local/directory` with the path to the directory on your local machine where you want to save the file.
+
+  Suppose your username is `john`, your server's `IP` address is `192.168.1.100`, your database dump is located at `/var/www/yourwebsite/your_backup.sql`, and you want to download it to your `desktop`. The command would look like this:
+
+  ```bash
+  scp john@192.168.1.100:/var/www/yourwebsite/your_backup.sql ~/Desktop/
+  ```
+
+### Delete database dump from the server
+
+Once you have downloaded the database dump from the server, you should delete this file from the server. We can do this with:
+
+```bash
+rm your_backup.sql
+```
+
+### Search and Replace
+
+When moving a database from a live server to a local setup for Magento and WordPress, you often need to perform a search and replace operation. This is because these platforms store absolute URLs (including the domain name) and file paths in the database, which will differ between your live and local environments.
+
+#### Search and Replace for WordPress projects
+
+For WordPress projects we can do it with WP CLI. Import the database and then run this:
+
+```bash
+wp search-replace 'oldurl.com' 'newurl.local'
+wp search-replace 'https' 'http'
+```
+
+`https` to `http` step is unnecessary if you have SSL certificates set.
+
+#### Search and Replace for Magento projects
+
+Magento stores base URLs in its database, so you'll need to update them for your local environment.
+
+- First import the database:
+
+  ```bash
+  mysql -u username -p database_name < database_dump.sql
+  ```
+
+- Access Your Database using a tool like phpMyAdmin or a MySQL client.
+  - Run SQL Queries to update the base URLs. The exact queries depend on your Magento version, but they generally look like this:
+
+    ```bash
+    UPDATE core_config_data SET value = 'http://yourlocaldomain/' WHERE path = 'web/unsecure/base_url';
+    UPDATE core_config_data SET value = 'https://yourlocaldomain/' WHERE path = 'web/secure/base_url';
+    ```
+
+    Replace `http://yourlocaldomain/` and `https://yourlocaldomain/` with your local environment's URL.
+
+  - Clear the Cache after making these changes, either via the admin panel or by deleting the cache files from the file system.
+
+- Alternatively you can do this from the command line:
+  - Access mysql using this command
+
+    ```bash
+    mysql -u username -p password
+    ```
+
+    Replace `username` with your mysql user and `password` with your database password. For example:
+
+    ```bash
+    mysql -uroot -p123456
+    ```
+
+  - Select the Database:
+
+    ```bash
+    USE your_database_name;
+    ```
+
+    Replace `your_database_name` with the actual name of your database.
+
+  - Run your update Queries:
+
+    ```bash
+    UPDATE core_config_data SET value = 'http://newurl.dev/' WHERE path = 'web/unsecure/base_url';
+    UPDATE core_config_data SET value = 'https://newurl.dev/' WHERE path = 'web/secure/base_url';
+    ```
+
+  - Exit MySQL:
+
+    ```bash
+    exit
+    ```
+
+  - Clear Cache:
+
+    After updating the URLs, you need to clear the Magento cache to ensure the changes take effect.
+
+    - If you have access to the Magento admin panel, navigate to System > Cache Management, and clear the cache.
+    - Alternatively, you can manually clear the cache by deleting the contents of the var/cache directory in your Magento installation.
+
+    For Magento 2, you might need to reindex after making changes to the database.
+
+    ```bash
+    php bin/magento indexer:reindex
+    ```
+
+Finally, test your site to ensure that the base URLs have been updated correctly and that the site is functioning as expected.
