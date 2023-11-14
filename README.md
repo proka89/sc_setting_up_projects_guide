@@ -843,4 +843,41 @@ To see the full error you need to go to your project `root`, and then to the `va
     |   |.. ...
 ```
 
+### Rename errors/local.xml.sample file
 
+We can just rename `local.xml.sample` which is inside our project root, `errors` folder. You just need to:
+
+- Rename `local.xml.sample` to `local.xml`
+- Refresh Cache from your Magento Admin (System -> Cache Management).
+
+After this you will see error messages directly on you web page.
+
+### Edit index.php file
+
+You can edit the `index.php` file in your project `root`.
+
+- Open the file
+- Go to this part:
+
+  ```php
+  if (isset($_SERVER['MAGE_IS_DEVELOPER_MODE'])) {
+    Mage::setIsDeveloperMode(true);
+  }
+
+  #ini_set('display_errors', 1);
+  ```
+
+- Set the `SERVER` variable `MAGE_IS_DEVELOPER_MODE` as `true`
+- Set PHP error reporting as `E_ALL`
+- Enable PHP error display
+
+  ```php
+  $_SERVER['MAGE_IS_DEVELOPER_MODE'] = true;
+  error_reporting(E_ALL);
+
+  if (isset($_SERVER['MAGE_IS_DEVELOPER_MODE'])) {
+    Mage::setIsDeveloperMode(true);
+  }
+
+  ini_set('display_errors', 1);
+  ```
