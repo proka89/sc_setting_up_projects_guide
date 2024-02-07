@@ -1143,3 +1143,17 @@ Magento stores base URLs in its database, so you'll need to update them for your
     ```
 
 Finally, test your site to ensure that the base URLs have been updated correctly and that the site is functioning as expected.
+
+#### How to rsync something from a server
+
+In some cases you will not be able to update a plugin in your local environment for example, but we can update the same plugin on our staging or production server, and then we can rsync that with our local.
+
+To do this we can use a command like this one:
+
+```bash
+rsync -av -e ssh john@192.168.1.100:PATH_TO_YOUR_ROOT_DIRECTORY/wp-content/plugins/PLUGIN_FOLDER_NAME ~/Local\ Sites/PROJECT_NAME/app/public/wp-content/plugins
+```
+
+Make sure that:
+- Remote Path is correct, you can check this path in our deployment scripts.
+- Adjust the Local Path Escaping if necessary. For example here we have `Local\ Sites` but in some cases on the shell you're using, you might need the double backslash like this: `Local\\ Sites`
