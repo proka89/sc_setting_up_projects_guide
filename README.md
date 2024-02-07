@@ -66,6 +66,7 @@ This guide aims to provide a step-by-step process for setting up WordPress and M
   - [Search and Replace](https://github.com/proka89/sc_setting_up_projects_guide#search-and-replace)
     - [Search and Replace for WordPress projects](https://github.com/proka89/sc_setting_up_projects_guide#search-and-replace-for-wordpress-projects)
     - [Search and Replace for Magento projects](https://github.com/proka89/sc_setting_up_projects_guide#search-and-replace-for-magento-projects)
+  - [How to rsync something from a server](https://github.com/proka89/sc_setting_up_projects_guide?tab=readme-ov-file#how-to-rsync-something-from-a-server)
 
 ## Setting up projects via Docker
 
@@ -1144,7 +1145,7 @@ Magento stores base URLs in its database, so you'll need to update them for your
 
 Finally, test your site to ensure that the base URLs have been updated correctly and that the site is functioning as expected.
 
-#### How to rsync something from a server
+### How to rsync something from a server
 
 In some cases you will not be able to update a plugin in your local environment for example, but we can update the same plugin on our staging or production server, and then we can rsync that with our local.
 
